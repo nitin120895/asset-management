@@ -1,0 +1,43 @@
+<div class="container" style="width:800px;">
+
+<div class="jumbotron">
+
+
+      {{#if msg}}
+          <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{msg}}</strong>
+          </div>
+        {{/if}}
+
+
+  <h1 style="">status</h1>
+  <h4 style="">3 for aproved by support</h4>
+
+
+<h3 style="color:coral">welcome user :{{support}}{{manager}}</h3>
+
+<h1 style="">dispatch requests</h1>
+
+
+<table class="table table-hover">
+<tr><th>asset name</th><th>assetid</th><th>empid</th><th>managerid</th><th>status</th><th>user</th></tr>
+{{#each data}}
+<tr>
+<td>{{this.assetname}}</td>
+<td>{{this.assetid}}</td>
+<td>{{this.empid}}</td>
+<td>{{this.managerid}}</td>
+
+<td>{{this.status}}</td>
+<td>{{this.user}}</td>
+<td>dispatched</td>
+
+
+</tr>
+
+
+{{/each }}
+</table>
+</div>
+</div>

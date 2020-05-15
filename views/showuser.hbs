@@ -1,0 +1,74 @@
+
+<script>
+function mDown(obj) {
+  obj.style.backgroundColor = "#1ec5e5";
+  obj.innerHTML = "activated";
+}
+
+function mUp(obj) {
+  obj.style.backgroundColor="#D94A38";
+  obj.innerHTML="deactivated";
+}
+</script>
+
+
+
+    <div class="container" style="width:900px;">
+
+    <div class="jumbotron">
+
+
+
+            {{#if msg}}
+                <div class="alert alert-success alert-dismissible">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>{{msg}}</strong>
+                </div>
+              {{/if}}
+
+
+    <h3 style="color:coral">welcome admin :{{admin}}</h3>
+
+    <h1 style="">user details</h1>
+
+
+  <table class="table table-hover">
+  <tr><th>name</th><th>email</th><th>designation</th><th>mobile</th><th>password</th><th>status</th></tr>
+  {{#each data}}
+  <tr>
+  <td>{{this._doc.name}}</td>
+  <td>{{this._doc.email}}</td>
+  <td>{{this._doc.designation}}</td>
+
+  <td>{{this._doc.mobile}}</td>
+  <td>{{this._doc.password}}</td>
+  <td>{{this.requeststatus}}</td>
+
+  <td><a  class="glyphicon glyphicon-trash" href="/deletesub?_id={{this._doc._id}}" onclick="return confirm('do u want to delete this..')"></a></td>
+  <td><a href="/upuser?sid={{this._doc._id}}" class="glyphicon glyphicon-edit"></a></td>
+
+  <td><a href="/deactivate?uid={{this._doc.email}}&&status={{this.requeststatus}}"  class="btn btn-info btn-lg">
+           <span class="glyphicon glyphicon-send"></span> act/deact
+         </a></td>
+
+<!--
+
+  <td><a onclick="mDown(this)" ondblclick="mUp(this)"
+  style="background-color:#D94A38">
+  deactivated</a></td>
+
+-->
+
+
+
+  </tr>
+
+
+  {{/each }}
+
+
+
+
+  </table>
+  </div>
+  </div>

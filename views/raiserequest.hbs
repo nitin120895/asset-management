@@ -1,0 +1,54 @@
+
+<div class="container" style="width:700px;">
+  <div class="jumbotron">
+
+    {{#if msg}}
+      <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{msg}}</strong>
+      </div>
+    {{/if}}
+
+
+    <h3 style="color:coral ">welcome  :{{employee}}{{manager}}</h3>
+
+
+  <h2>request assets</h2>
+  <form action="/reqasset" method="post">
+
+    <input type="hidden" value='{{data.email}}'  name="user" />
+
+    <input type="hidden" value='{{data.supportid}}'  name="support" />
+
+    <input type="hidden" class="form-control" id="email"  value="{{data.employeeid}}" placeholder="Enter name" name="empid">
+
+
+
+    <div class="form-group">
+      <label for="email">assetId:</label>
+      <input type="text" class="form-control" id="email"   placeholder="Enter mobile no." name="aid"required>
+    </div>
+
+
+            <div class="form-group">
+              <label for="email"> assetname:</label>
+              <select  class="form-control" id="des" placeholder="select" name="atype" onchange="openmanid()" required>
+                <option>laptop</option>
+                <option>hard drive</option>
+                <option>pendrive</option>
+              </select>
+            </div>
+
+
+                    <div class="form-group">
+                      <label for="email">managerid:</label>
+                      <input type="text" class="form-control" id="email"  value="{{data.managerid}}" placeholder="Enter name" name="manid"required>
+                    </div>
+
+
+
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+</div>

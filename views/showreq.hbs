@@ -1,0 +1,30 @@
+<div class="container" style="width:700px;">
+
+<div class="jumbotron">
+
+
+<h3 style="color:coral">welcome user :{{employee}}{{manager}}{{support}}</h3>
+
+<h1 style="">my requests</h1>
+
+
+<table class="table table-hover">
+<tr><th>asset name</th><th>assetid</th><th>empid</th><th>managerid</th><th>status</th><th>user</th></tr>
+{{#each data}}
+<tr>
+<td>{{this._doc.assetname}}</td>
+<td>{{this._doc.assetid}}</td>
+<td>{{this._doc.empid}}</td>
+<td>{{this._doc.managerid}}</td>
+
+<td>{{this.requeststatus}}</td>
+<td>{{this._doc.user}}</td>
+<td><a  class="glyphicon glyphicon-trash" href="/deletereq?_id={{this._doc._id}}" onclick="return confirm('do u want to delete this..')"></a></td>
+
+</tr>
+
+
+{{/each }}
+</table>
+</div>
+</div>

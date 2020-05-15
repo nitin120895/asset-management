@@ -1,0 +1,97 @@
+
+
+<html>
+
+
+
+<script>
+
+function openmanid() {
+  var x = document.getElementById("des").value;
+  var y = document.getElementById("managerid");
+
+  if (x==="manager") {
+
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+}
+
+
+</script>
+
+<body>
+
+<div class="container">
+  <div class="jumbotron">
+
+    {{#if msg}}
+        <div class="alert alert-success alert-dismissible">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>{{msg}}</strong>
+        </div>
+      {{/if}}
+
+    <h3 style="color:coral ">welcome admin :{{admin}}</h3>
+
+
+  <h2>create user</h2>
+  <form action="/updateuser" method="post">
+    <input type="hidden" value='{{data._id}}'  name="sid" />
+
+
+    <div class="form-group">
+      <label >Email:</label>
+      <input type="text" class="form-control" id="eid" placeholder="Enter email"  value='{{data.email}}' name="uid" required>
+    </div>
+  <div id="msg" style="color:coral">
+  </div>
+
+    <div class="form-group">
+      <label for="email">name:</label>
+      <input type="text" class="form-control" id="email" placeholder="Enter name" value='{{data.name}}' name="uname"required>
+    </div>
+    <div class="form-group">
+      <label for="email">mobile no:</label>
+      <input type="text" class="form-control" id="email" placeholder="Enter mobile no." value='{{data.mobile}}' name="umob"required>
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd" placeholder="Enter password" value='{{data.password}}' name="pwd"required>
+    </div>
+
+    <div class="form-group">
+      <label for="email"> designation:</label>
+      <select  class="form-control" id="des" placeholder="select" value='{{data.designation}}' name="designation" onchange="openmanid()" required>
+        <option>--select--</option>
+        <option>admin</option>
+
+        <option>employee</option>
+        <option>support</option>
+        <option>manager</option>
+      </select>
+    </div>
+     <div class="form-group" id="managerid" >
+    <label >managerid:</label>
+    <input type="text" class="form-control" id="managerid" placeholder="Enter email" value='{{data.managerid}}' name="manid">
+  </div>
+<div id="msg" style="color:coral">
+</div>
+
+
+<div class="form-group" id="supportid" >
+<label >supportid:</label>
+<input type="text" class="form-control" id="supportid" placeholder="Enter email" value='{{data.supportid}}' name="supportid">
+</div>
+<div id="msg" style="color:coral">
+</div>
+
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+
+<div class="container" style="width:700px;">
+  <div class="jumbotron">
+
+    {{#if msg}}
+      <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{msg}}</strong>
+      </div>
+    {{/if}}
+
+
+    <h3 style="color:coral ">welcome  :{{employee}}{{manager}}</h3>
+
+
+  <h2>transfer assets</h2>
+  <form action="/assettransfer" method="post">
+
+    <input type="hidden" value='{{data._id}}'  name="sid" />
+    <input type="text" value='{{data.user}}'  name="fromuser" />
+
+
+
+
+
+    <div class="form-group">
+      <label for="email"> to empId:</label>
+      <input type="text" class="form-control" id="email"   placeholder="Enter" name="empid">
+    </div>
+
+
+        <div class="form-group">
+          <label for="email"> to user:</label>
+          <input type="text" class="form-control" id="email"   placeholder="Enter " name="user"required>
+        </div>
+
+
+            <div class="form-group">
+              <label for="email"> to managerId:</label>
+              <input type="text" class="form-control" id="email"  value="{{data.managerid}}"  placeholder="" name="manid"required>
+            </div>
+
+
+
+
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+</div>

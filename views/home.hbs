@@ -1,0 +1,31 @@
+
+
+
+<div class="container" style="width:700px;">
+  <div class="jumbotron">
+
+        {{#if msg}}
+          <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{msg}}</strong>
+          </div>
+        {{/if}}
+
+
+{{#if admin}}
+<h3 style="color:coral ">welcome admin :{{admin}}</h3>
+{{else}}
+{{#if employee}}
+<h3 style="color:coral ">welcome user :{{employee}}</h3>
+{{else}}
+{{#if manager}}
+<h3 style="color:coral ">welcome manager :{{manager}}</h3>
+{{else}}
+{{#if support}}
+<h3 style="color:coral ">welcome support :{{support}}</h3>
+{{/if}}
+{{/if}}
+{{/if}}
+{{/if}}
+
+</div></div>
