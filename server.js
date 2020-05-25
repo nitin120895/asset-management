@@ -104,6 +104,8 @@ app.get('/addasset',(req,res)=>{
 const Login=require('./models/login')
 const Asset=require('./models/asset')
 const Request=require('./models/request')
+const Task=require('./models/task')
+const Mail=require('./models/mail')
 
 /*
 app.get('/insert',(req,res)=>{
@@ -201,6 +203,48 @@ app.get('/profile',(req,res)=>{
 }
 })
 })
+
+
+/////////////chang profile for all/////////////
+
+app.get('/changeprofile',(req,res)=>{
+  var user;
+  if (req.session.employee) {
+    user= req.session.employee
+  }else if (req.session.manager) {
+    user= req.session.manager
+  }else if (req.session.support) {
+    user= req.session.support
+  }else
+  user= req.session.admin
+
+      Login.find({email:user},(err,result)=>{
+        console.log(result);
+
+        if(err)
+        throw err;
+        else if (result.length!=0) {
+
+  res.render('changeprofile', {data:result, admin:req.session.admin,employee:req.session.employee,manager:req.session.manager,support:req.session.support})
+}
+})
+})
+
+
+app.post('/changeprofile',(req,res)=>{
+  var uid=req.body.uid
+  var uname=req.body.uname
+  var umob=req.body.umob
+
+  var cpwd=req.body.cpwd
+  var npwd=req.body.npwd
+
+Login.updateOne({email:uid,password:cpwd},{$set:{password:npwd,name:uname,mobile:umob}},(err,result)=>{
+   if(err) throw err;
+   else
+         res.render('home',{msg:' profile details  changed successfully',admin:req.session.admin,employee:req.session.employee,manager:req.session.manager,support:req.session.support})
+       })
+  })
 
 
 /////////////////////activate /deactivate user////////////////
@@ -368,28 +412,6 @@ Login.updateOne({_id: sid},{$set:{name:subname,email:subid,mobile:submob,passwor
 }
   })
 })
-
-/////////////chang password for all/////////////
-
-app.get('/changepass',(req,res)=>{
-
-  res.render('changepass', {admin:req.session.admin,employee:req.session.employee,manager:req.session.manager,support:req.session.support})
-
-})
-
-
-app.post('/changepass',(req,res)=>{
-  var uid=req.body.uid
-  var cpwd=req.body.cpwd
-  var npwd=req.body.npwd
-var session=req.session.user
-
-Login.updateOne({email:uid,password:cpwd},{$set:{password:npwd}},(err,result)=>{
-   if(err) throw err;
-   else
-         res.render('changepass',{msg:' passsword changed successfully',admin:req.session.admin,employee:req.session.employee,manager:req.session.manager,support:req.session.support})
-       })
-  })
 
 /////////////////delete for alll things//////////////////
 
@@ -615,6 +637,29 @@ console.log(user);
 
   })
 })
+/////////////////////////show employee under same manager//////////
+app.get('/showteammember',(req,res)=>{
+var user= req.session.employee
+  Login.findOne({email:user},(err,result)=>{
+    console.log(result);
+    if(err)
+    throw err;
+    else if (result.length != 0) {
+      var manid=result.managerid
+      Login.find({designation:"employee",managerid:manid},(err,result1)=>{
+        console.log(result1);
+           if (err)
+           throw err;
+           else {
+             res.render('team',{data:result1, employee:req.session.employee , manager:req.session.manager})
+
+           }
+      })
+  }
+  })
+})
+
+
 
 /////////////aproved req for employee/////////
 
@@ -626,7 +671,7 @@ app.get('/empasset',(req,res)=>{
   }else
   user= req.session.manager
 
-  Request.find({managerid:"m1",status:3,user:user},(err,result)=>{
+  Request.find({status:3,user:user},(err,result)=>{
 
     console.log(result);
 
@@ -638,6 +683,30 @@ app.get('/empasset',(req,res)=>{
   })
 })
 
+///////////////////////////show all employee under manager//////////////
+
+    app.get('/showemployeeUndermanager',(req,res)=>{
+    var user;
+    if (req.session.employee) {
+      user= req.session.employee
+    }else
+    user= req.session.manager
+    Login.findOne({email:user},(err,result)=>{
+      console.log(">>>>>>>>>>"+result);
+      if(err)
+      throw err;
+      else if (result.length !=0) {
+        var manid =result.managerid
+      Login.find({designation:"employee",managerid:manid},(err,result1)=>{
+        console.log(result1);
+        if(err)
+        throw err;
+        else
+        res.render('employeeUndermanager',{data:result1, employee:req.session.employee , manager:req.session.manager})
+    })
+  }
+      })
+    })
 
 
 
@@ -648,8 +717,15 @@ app.get('/empasset',(req,res)=>{
 
 
 app.get('/viewpendingreqbymanager',(req,res)=>{
+  var user= req.session.manager
+    Login.findOne({email:user},(err,result)=>{
+      console.log(result);
+      if(err)
+      throw err;
+      else if (result.length != 0) {
+        var manid=result.managerid
 
-  Request.find({managerid:"m1",status:0},(err,result)=>{
+  Request.find({managerid:manid,status:0},(err,result)=>{
     console.log(result);
 
     if(err)
@@ -658,6 +734,8 @@ app.get('/viewpendingreqbymanager',(req,res)=>{
     res.render('pendingreq',{data:result, manager:req.session.manager})
 
   })
+}
+})
 })
 
 ///////support pendindg req//////////
@@ -666,7 +744,7 @@ app.get('/viewpendingreqbymanager',(req,res)=>{
 
 app.get('/viewpendingreqbysupport',(req,res)=>{
 
-  Request.find({managerid:"m1",status:2},(err,result)=>{
+  Request.find({status:2},(err,result)=>{
     console.log(result);
 
     if(err)
@@ -871,3 +949,389 @@ app.post('/assettransfer',(req,res)=>{
 
          })
     })
+
+
+
+    ////////////////assign task to employee by manager /////////////
+/////get//////
+    app.get('/assigntask',(req,res)=>{
+  var user= req.session.manager
+
+    var uid=req.query.uid
+
+      Login.findOne({email:uid},(err,result)=>{
+        console.log(result);
+
+        if(err)
+        throw err;
+        else
+        res.render('assigntask',{data:result, employee:req.session.employee , manager:req.session.manager})
+
+      })
+    })
+
+//////////////post///////
+
+
+app.post('/assigntask',(req,res)=>{
+  var touser=req.body.touser
+  var tname=req.body.tname
+  var deadlinedate=req.body.date
+  var description=req.body.description
+  var manid=req.body.manid
+  var status=0
+  var completionstatus="open"
+  var rating=0
+  var Task1=Task({
+    user:touser,
+    taskname:tname,
+    taskdescription:description,
+    managerid:manid,
+    status:status,
+    deadlinedate:deadlinedate,
+    completion_status:completionstatus,
+    rating:rating
+  })
+  Task1.save().then((data)=>{
+    console.log(data);
+     if(data.length !=0){
+
+      res.render('home',{msg:'task assign to  employee successfully ',manager:req.session.manager})
+     // console.log('Email sent: ' + info.response);
+}
+})
+})
+////////////////////////////show assign task by manager//////////////
+    app.get('/showtasks',(req,res)=>{
+  var user= req.session.manager
+      Login.findOne({email:user},(err,result)=>{
+        console.log(result);
+        if(err)
+        throw err;
+        else if (result.length != 0) {
+          var manid=result.managerid
+
+            Task.find({managerid:manid,$or:[{status:0},{status:1},{status:2},{status:3}]},(err,result)=>{
+              console.log(result);
+
+              if(err)
+              throw err;
+              else if (result.length != 0)
+              {
+                var requeststatus=result.map((rec)=>{
+                  if (rec.status==0)
+                  return "pending ";
+
+                  if (rec.status==1)
+                  return "unable to do";
+                  else if (rec.status==2)
+                  return "task in progress";
+                  else if (rec.status==3)
+                  return "completed..";
+
+                })
+                var finaldata=result.map((rec,index)=>{
+                  var join={requeststatus:requeststatus[index]};
+                  var object={...rec,...join}
+                  return object;
+            })
+            console.log(finaldata);
+            res.render('showtasks',{data:finaldata, employee:req.session.employee,manager:req.session.manager})
+
+            }
+            else
+            res.render('showtasks',{msg:"no record found", employee:req.session.employee,manager:req.session.manager})
+
+            })
+          }
+})
+})
+
+////////////////////////////////
+
+
+    //////////////////////
+
+/////////////////show task by employee///////////
+app.get('/showemptask',(req,res)=>{
+var user= req.session.employee
+
+            Task.find({user:user,$or:[{status:0},{status:1},{status:2},{status:3}]},(err,result)=>{
+              console.log(result);
+
+              if(err)
+              throw err;
+              else if (result.length != 0)
+              {
+                var requeststatus=result.map((rec)=>{
+                  if (rec.status==0)
+                  return "pending ";
+
+                  if (rec.status==1)
+                  return "unable to do";
+                  else if (rec.status==2)
+                  return "task in progress";
+                  else if (rec.status==3)
+                  return "completed..";
+
+                })
+                var finaldata=result.map((rec,index)=>{
+                  var join={requeststatus:requeststatus[index]};
+                  var object={...rec,...join}
+                  return object;
+            })
+            console.log(finaldata);
+            res.render('showemptask',{data:finaldata, employee:req.session.employee,manager:req.session.manager})
+
+            }
+            else
+            res.render('showemptask',{msg:"no record found", employee:req.session.employee,manager:req.session.manager})
+
+            })
+})
+
+//////////////////////////////chnge final completion stataus open or close//////////////////
+
+app.get('/completionstatus',(req,res)=>{
+  var cid=req.query.cid
+var finalstatus=req.query.fstatus
+if (finalstatus==="close") {
+finalstatus="open"
+}else
+finalstatus="close"
+      Task.updateOne({_id:cid},{$set:{completion_status:finalstatus}},(err,result)=>{
+        console.log(result);
+           if (err)
+           throw err;
+           else {
+             res.render('home',{msg:"status changed successfully..." ,employee:req.session.employee , manager:req.session.manager})
+
+           }
+
+      })
+})
+
+////////////////////////for givr rating to employee on task performance/////////////
+app.get('/rating',(req,res)=>{
+  var rid=req.query.rid
+  Task.findOne({_id:rid},(err,result)=>{
+    console.log(result);
+    if (err)
+    throw err;
+    else
+    res.render('rating',{data:result,employee:req.session.employee , manager:req.session.manager})
+
+  })
+})
+
+
+app.post('/rating',(req,res)=>{
+  var rid=req.body.rid
+console.log(rid);
+  var rating=req.body.rate
+      Task.updateOne({_id:rid},{$set:{rating:rating}},(err,result)=>{
+        console.log(result);
+           if (err)
+           throw err;
+           else if (result.nModified >0) {
+             res.render('home',{msg:"rating  save successfully..." ,employee:req.session.employee , manager:req.session.manager})
+
+           }else{
+             res.render('home',{msg:"rating  save fail,,,,,,,..." ,employee:req.session.employee , manager:req.session.manager})
+
+           }
+
+      })
+})
+
+
+////////////////////////for give status of project  by employee /////////////
+app.get('/taskstatusbyemp',(req,res)=>{
+  var sid=req.query.sid
+  Task.findOne({_id:sid},(err,result)=>{
+    console.log(result);
+    if (err)
+    throw err;
+    else
+    res.render('taskstatus',{data:result,employee:req.session.employee , manager:req.session.manager})
+
+  })
+})
+
+
+app.post('/taskstatusbyemp',(req,res)=>{
+  var rid=req.body.sid
+console.log(rid);
+  var status=req.body.status
+      Task.updateOne({_id:rid},{$set:{status:status}},(err,result)=>{
+        console.log(result);
+           if (err)
+           throw err;
+           else if (result.nModified >0) {
+             res.render('home',{msg:" task status changed successfully..." ,employee:req.session.employee , manager:req.session.manager})
+
+           }else{
+             res.render('home',{msg:"status changed  fail,,,,,,,..." ,employee:req.session.employee , manager:req.session.manager})
+
+           }
+
+      })
+})
+
+///////////////////sent and view messages////////////////
+
+app.get('/sendmail',(req,res)=>{
+var user;
+if (req.session.employee) {
+   user= req.session.employee
+}else
+user= req.session.manager
+
+  Login.findOne({email:user},(err,result)=>{
+    console.log(result);
+
+    if(err)
+    throw err;
+    else
+    res.render('sentmsg',{data:result, employee:req.session.employee , manager:req.session.manager})
+
+  })
+})
+
+//////////////post///////
+
+
+app.post('/sentmail',(req,res)=>{
+
+  var fromuser=req.body.frommail
+var touser=req.body.tomail
+var sub=req.body.sub
+var msg=req.body.msg
+
+var Mail1=Mail({
+touser:touser,
+fromuser:fromuser,
+subject:sub,
+massage:msg
+})
+Mail1.save().then((data)=>{
+console.log(data);
+ if(data.length !=0){
+
+  res.render('home',{msg:'mail sent successfully ',manager:req.session.manager,employee:req.session.employee})
+ // console.log('Email sent: ' + info.response);
+}
+})
+})
+
+
+//////////view recieved mails or messages..by manager
+
+app.get('/viewmails',(req,res)=>{
+
+var user= req.session.manager
+
+  Login.findOne({email:user},(err,result)=>{
+    console.log(result);
+
+    if(err)
+    throw err;
+    else if( result.length !=0)
+    {
+      manid=result.managerid
+      Mail.find({touser:manid},(err,result1)=>{
+console.log(result1);
+            if(err)
+            throw err;
+        else
+        res.render('viewmsg',{data:result1, employee:req.session.employee , manager:req.session.manager})
+
+      })
+    }
+  })
+})
+
+
+//////////////////view  recieved msg  of employee////////
+
+app.get('/viewempmails',(req,res)=>{
+
+var user= req.session.employee
+
+  Login.findOne({email:user},(err,result)=>{
+    console.log(result);
+
+    if(err)
+    throw err;
+    else if( result.length !=0)
+    {
+      manid=result.employeeid
+      Mail.find({touser:manid},(err,result1)=>{
+console.log(result1);
+            if(err)
+            throw err;
+        else
+        res.render('viewmsg',{data:result1, employee:req.session.employee , manager:req.session.manager})
+
+      })
+    }
+  })
+})
+
+//////// /////// show completion status of employee by managerid/////////
+app.get('/showcompletionstatus',(req,res)=>{
+  var sid=req.query.sid
+  ////////for totaltask done by employee  result.lenght/////////
+  console.log(sid);
+  Task.find({user:sid},(err,result)=>{
+    if(err)
+    throw err;
+    else if (result.length != 0) {
+      var manid=result[0].managerid
+console.log(manid);
+
+////////for total completedtask done by employee  result1.lenght/////////
+
+Task.find({status:3,user:sid,managerid:manid},(err,result1)=>{
+  console.log(result1);
+  if(err)
+  throw err;
+  else if (result1.length >= 0) {
+
+    ////////for total incompletedtask done by employee  result2.lenght/////////
+
+    Task.find({user:sid,managerid:manid,$or:[{status:0},{status:1},{status:2}]},(err,result2)=>{
+          console.log(result2);
+          if(err)
+          throw err;
+          else if (result2.length >= 0)
+          {
+             function completionpercentage() {
+              var totalpercentage=  (result1.length/result.length)*100
+              return totalpercentage;
+          }
+
+             var status={
+                    user:sid,
+                    totaltask:result.length,
+                    completed:result1.length,
+                    incompleted:result2.length,
+                    calulation:completionpercentage()
+
+             }
+             console.log(status);
+
+
+        res.render('empcompletionstatus',{total:status, employee:req.session.employee,manager:req.session.manager})
+
+        }
+        else
+        res.render('empcompletionstatus',{msg:"no record found", employee:req.session.employee,manager:req.session.manager})
+
+        })
+      }
+})
+}
+
+})
+})

@@ -1,0 +1,46 @@
+
+<script>
+</script>
+
+
+
+    <div class="container" style="width:900px;">
+
+    <div class="jumbotron">
+
+
+
+            {{#if msg}}
+                <div class="alert alert-success alert-dismissible">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>{{msg}}</strong>
+                </div>
+              {{/if}}
+
+
+    <h3 style="color:coral">welcome user :{{employee}}</h3>
+
+    <h1 style="">team member</h1>
+
+
+  <table class="table table-hover">
+  <tr><th>name</th><th>email</th><th>designation</th><th>mobile</th><th>managerid</th></tr>
+  {{#each data}}
+  <tr>
+  <td>{{this.name}}</td>
+  <td>{{this.email}}</td>
+  <td>{{this.designation}}</td>
+  <td>{{this.mobile}}</td>
+  <td>{{this.managerid}}</td>
+
+  </tr>
+
+
+  {{/each }}
+
+
+
+
+  </table>
+  </div>
+  </div>

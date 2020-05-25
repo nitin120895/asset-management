@@ -1,0 +1,48 @@
+<body>
+
+  <h1 style="color:coral;">welcome {{user}}</h1>
+
+<div class="container" style="width:600px">
+  <div class="jumbotron" >
+
+  {{#if msg}}
+
+  <div class="alert alert-success alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{msg}}</strong>
+  </div>
+{{/if}}
+
+
+  <h2>compose mail...</h2>
+  <form action="/sentmail" method="post">
+    <div class="form-group">
+      <label for="email">from:</label>
+      <input type="text"  class="form-control" id="email" placeholder="Enter email" name="frommail" required >
+    </div>
+
+    <div class="form-group">
+      <label for="email">to:</label>
+      <input type="text" class="form-control" id="email"  placeholder="Enter email" name="tomail" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">subject:</label>
+      <input type="text" class="form-control" id="email" placeholder="plz enter subject" name="sub" required>
+    </div>
+
+    <div class="form-group">
+      <label for="pwd">massage:</label>
+      <textarea class="form-control" id="pwd" placeholder="Enter  message here" name="msg" required>
+      </textarea>
+    </div>
+
+
+    <button type="submit" class="btn btn-default">Submit</button>
+
+  </form>
+</div>
+</div>
+
+
+</body>

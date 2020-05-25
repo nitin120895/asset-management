@@ -1,0 +1,47 @@
+
+<body>
+
+
+
+<div class="container" style="width:700px;">
+  <div class="jumbotron">
+    <h3 style="color:coral ">welcome manager :{{manager}}</h3>
+
+    {{#if msg}}
+      <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{msg}}</strong>
+      </div>
+    {{/if}}
+
+
+
+  <h2> assign task details</h2>
+  <form action="/assigntask" method="post">
+
+    <input type="text" value='{{data.email}}'  name="touser" />
+    <input type="text" value='{{data.managerid}}'  name="manid" />
+
+
+    <div class="form-group">
+      <label for="email">taskname:</label>
+      <input type="text" class="form-control" id="email" placeholder="Enter task name" name="tname"required>
+    </div>
+    <div class="form-group">
+      <label for="email">description:</label>
+      <input type="text" class="form-control" id="email" placeholder="description......." name="description"required>
+    </div>
+
+    <div class="form-group">
+
+      <label for="email"> deadline date</label>
+      <input type="date" class="form-control" id="pid" placeholder="Enter date" name="date" >
+    </div>
+
+
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+</div>
+</body>

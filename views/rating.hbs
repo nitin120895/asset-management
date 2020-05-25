@@ -1,0 +1,25 @@
+
+<div class="container" style="width:800px;">
+
+<div class="jumbotron">
+
+
+<h2>Rating</h2>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"></span>
+<span class="fa fa-star"></span>
+
+
+          <form action="/rating" method="post">
+            <input type="hidden" class="form-control" id="email"  value="{{data._id}}" placeholder="enter rating number" name="rid">
+
+            <div class="form-group">
+              <label for="email">give rating</label>
+              <input type="number" class="form-control" id="email" placeholder="enter rating number" name="rate">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+</div>
+</div>

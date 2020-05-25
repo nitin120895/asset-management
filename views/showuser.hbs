@@ -1,14 +1,5 @@
 
 <script>
-function mDown(obj) {
-  obj.style.backgroundColor = "#1ec5e5";
-  obj.innerHTML = "activated";
-}
-
-function mUp(obj) {
-  obj.style.backgroundColor="#D94A38";
-  obj.innerHTML="deactivated";
-}
 </script>
 
 
@@ -33,12 +24,13 @@ function mUp(obj) {
 
 
   <table class="table table-hover">
-  <tr><th>name</th><th>email</th><th>designation</th><th>mobile</th><th>password</th><th>status</th></tr>
+  <tr><th>name</th><th>email</th><th>designation</th><th>managerid</th><th>mobile</th><th>password</th><th>status</th></tr>
   {{#each data}}
   <tr>
   <td>{{this._doc.name}}</td>
   <td>{{this._doc.email}}</td>
   <td>{{this._doc.designation}}</td>
+  <td>{{this._doc.managerid}}</td>
 
   <td>{{this._doc.mobile}}</td>
   <td>{{this._doc.password}}</td>

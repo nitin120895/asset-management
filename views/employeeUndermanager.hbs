@@ -1,0 +1,61 @@
+
+    <div class="container">
+
+    <div class="jumbotron">
+
+
+
+            {{#if msg}}
+                <div class="alert alert-success alert-dismissible">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>{{msg}}</strong>
+                </div>
+              {{/if}}
+
+
+    <h3 style="color:coral">welcome manager :{{manager}}</h3>
+
+    <h1 style="">employees</h1>
+
+
+  <table class="table table-hover">
+  <tr><th>name</th><th>email</th><th>designation</th><th>mobile</th><th>employeeid</th><th>managerid</th></tr>
+  {{#each data}}
+  <tr>
+  <td>{{this.name}}</td>
+  <td>{{this.email}}</td>
+  <td>{{this.designation}}</td>
+  <td>{{this.mobile}}</td>
+  <td>{{this.employeeid}}</td>
+
+  <td>{{this.managerid}}</td>
+
+
+  <td><a href="/assigntask?uid={{this.email}}"  class="btn btn-info btn-lg">
+           <span class="glyphicon glyphicon-tasks"></span> assigntask
+         </a></td>
+
+           <td><a href="/showcompletionstatus?sid={{this.email}}"  class="btn btn-info btn-lg">
+                    <span class="glyphicon glyphicon-status"></span>view completion_status
+                  </a></td>
+<!--
+
+  <td><a onclick="mDown(this)" ondblclick="mUp(this)"
+  style="background-color:#D94A38">
+  deactivated</a></td>
+
+-->
+
+
+
+  </tr>
+
+
+  {{/each }}
+
+
+
+
+  </table>
+  </div>
+  </div>

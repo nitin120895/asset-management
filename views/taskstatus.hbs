@@ -1,0 +1,22 @@
+
+<div class="container" style="width:800px;">
+
+<div class="jumbotron">
+
+          <h2>task status</h2>
+          <h2>1-unable to do</h2>
+          <h2>2-in progress</h2>
+          <h2>3-completed</h2>
+
+          <form action="/taskstatusbyemp" method="post">
+            <input type="hidden" class="form-control" id="email"  value="{{data._id}}" placeholder="enter status number" name="sid">
+
+            <div class="form-group">
+              <label for="email">give status no.</label>
+
+              <input type="number" class="form-control" id="email" placeholder="enter rating number" name="status">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+</div>
+</div>

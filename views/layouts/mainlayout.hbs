@@ -17,7 +17,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
   body {font-family: "Lato", sans-serif;}
-
+.container{
+  margin-left: 250px;
+}
   .sidebar {
     height: 100%;
     width: 240px;
@@ -57,7 +59,7 @@
     {{#if admin}}
 
   <div class="sidebar">
-    <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+    <a href="#"><i class="fa fa-fw fa-home"></i> ASSET MANAGER</a>
     <a href="/profile"><i class="fa fa-fw fa-user"></i> profile</a>
 
     <a href="/createuser"><i class="fa fa-fw fa-user"></i> create user</a>
@@ -66,48 +68,51 @@
     <a href="/addasset"><i class="fa fa-fw fa-envelope"></i> add assets</a>
     <a href="/showasset"><i class="fa fa-fw fa-envelope"></i>show assets</a>
 
-    <a href="/changepass"><i class="fa fa-fw fa-wrench"></i> change password</a>
 
 
     <a href="/logout"><span  class="glyphicon glyphicon-log-out"></span> Logout</a>
     {{else}}
     {{#if employee}}
     <div class="sidebar">
-      <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+      <a href="#"><i class="fa fa-fw fa-home"></i> ASSET MANAGER</a>
 
     <a href="/profile"><i class="fa fa-fw fa-user"></i> profile</a>
+    <a href="/sendmail"><i class="fa fa-fw fa-envelope"></i>send msg</a>
+    <a href="/viewempmails"><i class="fa fa-fw fa-envelope"></i>inbox</a>
 
     <a href="/reqassetbyuser"><i class="fa fa-fw fa-envelope"></i> raise request</a>
     <a href="/viewrequest"><i class="fa fa-fw fa-user"></i>view request</a>
-
-
     <a href="/empasset"><i class="fa fa-fw fa-envelope"></i>my assets</a>
+    <a href="/showteammember"><i class="fa fa-fw fa-envelope"></i>my team</a>
 
-    <a href="/changepass"><i class="fa fa-fw fa-wrench"></i> change password</a>
+    <a href="/showemptask"><span  class="glyphicon glyphicon-tasks"></span> show my tasks</a>
+
     <a href="/logout"><span  class="glyphicon glyphicon-log-out"></span> Logout</a>
 
     {{else}}
     {{#if manager}}
     <div class="sidebar">
-      <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+      <a href="#"><i class="fa fa-fw fa-home"></i> ASSET MANAGER</a>
 
     <a href="/profile"><i class="fa fa-fw fa-user"></i> profile</a>
+    <a href="/sendmail"><i class="fa fa-fw fa-envelope"></i>send msg</a>
+    <a href="/viewmails"><i class="fa fa-fw fa-envelope"></i>inbox</a>
 
     <a href="/reqassetbyuser"><i class="fa fa-fw fa-envelope"></i> raise request</a>
     <a href="/viewrequest"><i class="fa fa-fw fa-user"></i>view my request</a>
 
     <a href="/viewpendingreqbymanager"><i class="fa fa-fw fa-user"></i>view  pending request</a>
-
+<a href="/showemployeeUndermanager"><i class="fa fa-fw fa-user"></i>view employee</a>
+<a href="/showtasks"><span  class="glyphicon glyphicon-tasks"></span> show tasks</a>
 
     <a href="/empasset"><i class="fa fa-fw fa-envelope"></i>my assets</a>
 
-    <a href="/changepass"><i class="fa fa-fw fa-wrench"></i> change password</a>
     <a href="/logout"><span  class="glyphicon glyphicon-log-out"></span> Logout</a>
 
     {{else}}
     {{#if support}}
     <div class="sidebar">
-      <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+      <a href="#"><i class="fa fa-fw fa-home"></i> ASSET MANAGER</a>
 
     <a href="/profile"><i class="fa fa-fw fa-user"></i> profile</a>
 
@@ -117,7 +122,6 @@
 
 
 
-    <a href="/changepass"><i class="fa fa-fw fa-wrench"></i> change password</a>
     <a href="/logout"><span  class="glyphicon glyphicon-log-out"></span> Logout</a>
 
 
@@ -166,6 +170,8 @@
 
   </div>
 
+  {{{body}}}
+
   </body>
   </html>
 
@@ -173,7 +179,6 @@
 
 </body>
 <body>
-{{{body}}}
 </body>
 
 

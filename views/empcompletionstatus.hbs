@@ -1,0 +1,39 @@
+<div class="container">
+
+<div class="jumbotron">
+
+
+        {{#if msg}}
+            <div class="alert alert-success alert-dismissible">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{msg}}</strong>
+            </div>
+          {{/if}}
+
+<h3 style="color:coral">welcome  :{{manager}}{{employee}}</h3>
+
+<h2 style=""> completion_status</h2>
+
+
+<table class="table table-hover">
+<tr><th>assignto</th><th>totaltask</th><th>completed</th><th>incompleted</th><th>completion%</th></tr>
+<tr>
+  <td>{{total.user}}</td>
+
+<td>{{total.totaltask}}</td>
+
+<td>{{total.completed}}</td>
+
+<td>{{total.incompleted}}</td>
+
+<td>{{total.calulation}}%</td>
+
+
+
+
+</tr>
+
+
+</table>
+</div>
+</div>

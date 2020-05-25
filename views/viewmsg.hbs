@@ -1,0 +1,24 @@
+
+
+
+<div class="container ">
+  <div class="jumbotron">
+    <h2 style="color:coral;">welcome {{manager}}{{employee}}</h2>
+<h1>inbox</h1>
+
+<table class="table table-hover">
+  <tr><th>sender</th><th>reciever</th><th>subject</th><th>massage</th><th>mail_date</th></tr>
+{{#each data}}
+<tr>
+<td>{{this.fromuser}}</td>
+<td>{{this.touser}}</td>
+<td>{{this.subject}}</td>
+<td>{{this.massage}}</td>
+<td>{{this.mail_date}}</td>
+<td><a  class="glyphicon glyphicon-trash" href="/deletemail?mid={{this._id}}" onclick="return confirm('do u want to delete this..')"></a></td>
+
+</tr>
+{{/each }}
+</table>
+</div>
+</div>

@@ -1,0 +1,42 @@
+<div class="container">
+
+<div class="jumbotron">
+
+
+        {{#if msg}}
+            <div class="alert alert-success alert-dismissible">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{msg}}</strong>
+            </div>
+          {{/if}}
+
+<h3 style="color:coral">welcome  :{{manager}}{{employee}}</h3>
+
+<h1 style=""> my tasks</h1>
+
+
+<table class="table table-hover">
+<tr><th>taskname</th><th>taskdescription</th><th>status</th><th>assigndate</th><th>deadline</th><th>managerid</th><th>rating</th><th>completion_status</th></tr>
+{{#each data}}
+<tr>
+<td>{{this._doc.taskname}}</td>
+<td>{{this._doc.taskdescription}}</td>
+<td>{{this.requeststatus}}<a href="/taskstatusbyemp?sid={{this._doc._id}}" class="glyphicon glyphicon-edit"></a></td>
+<td>{{this._doc.assigndate}}</td>
+<td>{{this._doc.deadlinedate}}</td>
+<td>{{this._doc.managerid}}</td>
+
+<td>{{this._doc.rating}}
+</td>
+
+<td>{{this._doc.completion_status}}</td>
+
+<td></td>
+
+</tr>
+
+
+{{/each }}
+</table>
+</div>
+</div>
