@@ -1,0 +1,29 @@
+
+<div class="container">
+  <div class="jumbotron">
+    <h3 style="color:coral">welcome  :{{admin}}{{employee}}</h3>
+
+
+    <h1 style="">search result</h1>
+
+                  {{#if msg}}
+                      <div class="alert alert-success alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                      <strong>{{msg}}</strong>
+                      </div>
+                    {{/if}}
+
+  {{#each data}}
+
+    <h3>file name: <a href="/{{this.filename}}" class="glyphicon glyphicon-paperclip" data-toggle="popover" title="click for download" >{{this.filename}}</a></h3>
+  <h3>uploadby :{{this.uploadby}}</h3>
+  <h3>document name:{{this.docname}}</h3>
+
+  <h3>doc category :{{this.category}}</h3>
+  <h3>description:{{this.description}}</h3>
+  <h3>department:{{this.department}}</h3>
+  <hr>
+
+  {{/each }}
+</div>
+</div>

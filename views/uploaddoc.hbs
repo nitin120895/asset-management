@@ -1,0 +1,160 @@
+
+
+<div class="container" style="width:400px">
+
+          {{#if msg}}
+              <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>{{msg}}</strong>
+              </div>
+            {{/if}}
+
+    <h3 style="color:coral">welcome admin :{{admin}}{{employee}}</h3>
+
+    <h1 style=""> add document</h1>
+
+    <!-- Button trigger modal //////////////////////////////////-->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+      add category
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">add category</h4>
+          </div>
+          <div class="modal-body">
+
+            <form  action="/addcategory" method="post">
+              <input type="hidden" class="form-control" id="pid" placeholder="Enter " name="uploadby" value="{{admin}} "required>
+              <input type="text" class="form-control" id="pid" placeholder="Enter category" name="category" required>
+<br><br>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+<!---/////////////////////// document upload form////////////////-->
+<form action="/uploaddoc" method="post" enctype="multipart/form-data" class="form-horizontal">
+  <input type="hidden" class="form-control" id="pid" placeholder="Enter user name" name="admin" value="{{admin}}{{employee}}" required>
+
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">document name  </label>
+    <div class="col-sm-10">
+  <input type="text" class="form-control" class="col-sm-10" id="pid" placeholder="Enter doc name" name="pname" required>
+</div>
+</div>
+
+<div id='msg' style="color:coral">
+</div>
+
+
+<div class="form-group">
+  <label for="email" class="col-sm-2 control-label">category    </label>
+  <div class="col-sm-10">
+
+<br><br>
+  <select  class="form-control" id="email" placeholder="select" name="cat" required>
+    <option>select</option>
+    {{#each category}}
+        <option>{{this.categoryname}}</option>
+    {{/each}}
+  </select>
+</div>
+</div>
+
+
+<div class="form-group">
+  <label for="email" class="col-sm-2 control-label">  department</label>
+  <div class="col-sm-10">
+
+  <select  class="form-control" id="email" placeholder="select" name="department" required>
+
+  <option>select</option>
+{{#each data}}
+    <option>{{this._id}}</option>
+{{/each}}
+  </select>
+</div>
+</div>
+
+<div class="form-group">
+  <label for="pwd" class="col-sm-2 control-label">file</label>
+  <div class="col-sm-10">
+
+  <input type="file" class="form-control" id="pwd"  name="filename" required>
+</div>
+<br>
+<br>
+
+<div class="form-group">
+  <label for="email" class="col-sm-2 control-label">permissions:</label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+  <br>
+  <br>
+  <div class="col-sm-10">
+  <table class="table table-hover">
+  <tr><th>department</th><th>view</th><th>not view</th></tr>
+  <tr>
+    <td>HR</td>
+  <td>  <input type="radio" id="male" name="hr" value="view"></td>
+  <td>  <input type="radio" id="male" name="hr" value="not view"></td>
+</tr>
+
+<tr>
+  <td>support</td>
+<td>  <input type="radio" id="male" name="support" value="view"></td>
+<td>  <input type="radio" id="male" name="support" value="not view"></td>
+</tr>
+
+<tr>
+  <td>manager</td>
+<td>  <input type="radio" id="male" name="manager" value="view"></td>
+<td>  <input type="radio" id="male" name="manager" value="not view"></td>
+</tr>
+
+<tr>
+  <td>employee</td>
+<td>  <input type="radio" id="male" name="employee" value="view"></td>
+<td>  <input type="radio" id="male" name="employee" value="not view"></td>
+  </tr>
+
+
+  </table>
+  </div>
+</div>
+
+
+
+
+
+<div class="form-group">
+  <label for="email" class="col-sm-2 control-label">description:</label>
+  <div class="col-sm-10">
+
+  <textarea class="form-control" id="email" placeholder="description" name="description" rows="2" cols="5" required>
+  </textarea>
+</div>
+</div>
+
+
+<div class="form-group">
+  <label for="email" class="col-sm-2 control-label">comment:</label>
+  <div class="col-sm-10">
+
+  <textarea class="form-control" id="email" placeholder="description" name="comment" required>
+  </textarea>
+</div>
+</div>
+
+<div class="col-sm-8">
+<button type="submit" class="btn btn-primary btn-lg">save</button>
+</div>
+
+</form>
+</div>
+</div>

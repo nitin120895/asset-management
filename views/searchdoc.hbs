@@ -1,0 +1,43 @@
+<body>
+
+
+<div class="container" style="width:600px">
+  <div class="jumbotron" >
+    <h3 style="color:coral;">welcome {{admin}}</h3>
+
+  {{#if msg}}
+
+  <div class="alert alert-success alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{msg}}</strong>
+  </div>
+{{/if}}
+
+
+  <h2>search document....</h2>
+  <form action="/searchresult" method="get">
+    <div class="form-group">
+      <label for="email">search:</label>
+      <input type="text"  class="form-control" id="email" placeholder="Enter text" name="typethis" required >
+    </div>
+
+
+    <div class="form-group">
+      <label for="email"> search by</label>
+      <select  class="form-control" id="email" placeholder="select" name="searchby" required>
+        <option>department</option>
+        <option>category</option>
+        <option>uploadby</option>
+        <option>docname</option>
+
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+
+  </form>
+</div>
+</div>
+
+
+</body>

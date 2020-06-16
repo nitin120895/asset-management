@@ -16,7 +16,6 @@ app.engine('handlebars',hbs({
 }));
 
 
-
 //config viewengine on hbs
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','hbs')
@@ -62,8 +61,6 @@ app.listen(3000,()=>{
 console.log("server started on port:3000")
 })
 
-
-
 //config body bodyparser
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({
@@ -71,30 +68,20 @@ app.use(bodyparser.urlencoded({
 }))
 
 
-
 const mongoose = require('mongoose');
 const URL="mongodb://localhost:27017/assetdb";
 mongoose.connect(URL)
-
 
 app.get('/',(req,res)=>{
 
   res.render('login')
 })
 
-
-
-
-
-
 app.get('/logout',(req,res)=>{
   req.session.destroy();
 
   res.render('login',{msg:"logout successfull"})
 })
-
-
-
 
 app.get('/addasset',(req,res)=>{
   res.render('addasset',{admin:req.session.admin})
@@ -106,6 +93,7 @@ const Asset=require('./models/asset')
 const Request=require('./models/request')
 const Task=require('./models/task')
 const Mail=require('./models/mail')
+const Category=require('./models/category')
 
 /*
 app.get('/insert',(req,res)=>{
@@ -180,7 +168,6 @@ app.post('/logincheck',(req,res)=>{
 })
 
 /////////////profile//////////////////////////
-
 
 app.get('/profile',(req,res)=>{
   var user;
@@ -287,7 +274,6 @@ Login.updateOne({email:id},{$set:{status:status}},(err,result)=>{
 
 
 ///show user////////////
-
 
 app.get('/showuser',(req,res)=>{
   Login.find({$or:[{status:0},{status:1}]},(err,result)=>{
@@ -471,11 +457,421 @@ if(result.affectedRows!=0)
 })
 })
 
+//////////////upload document/////////////
+////file upload
+const upload = require('express-fileupload')
+app.use(upload())
 
 
+app.get('/uploaddoc',(req,res)=>{
+  Login.aggregate( [
+  {
+    $group: {
+       _id:"$designation", //////////group by department//////
+       count: { $sum: 1 }
+    }
+  }
+]
+,(err,result)=>{
+    console.log(result);
+    if(err)
+    throw err;
+    else if (result.lenght != 0) {
+      Category.find((err,result1)=>{
+        console.log(result1);
+        if(err)
+        throw err;
+        res.render("uploaddoc",{data:result,category:result1,admin:req.session.admin,employee:req.session.employee})
+
+      })
+    }
+})
+})
+///////////////add category for upload document///////////
+
+//////////////create Category/////////
+
+app.post('/addcategory',(req,res)=>{
+
+  var uploadby=req.body.uploadby
+  console.log(uploadby);
+  var category=req.body.category
+
+  var Category1=Category({
+    categoryname:category,
+    add_by:uploadby
+  })
+  Category1.save().then((data)=>{
+    res.render('uploaddoc',{msg:"category added successfully",admin:req.session.admin,employee:req.session.employee})
+  })
+})
+
+///////////////admin upload document///////
+app.use(express.static('upload'))
+var Document=require('./models/document')
+
+app.post('/uploaddoc',(req,res)=>{
+  console.log(req.files);
+  if (req.files)
+  {
+    var uploadername=req.body.admin;
+    var docname=req.body.pname;
+    var category=req.body.cat;
+    var department=req.body.department;
+    var description=req.body.description;
+    var comment=req.body.comment;
+    var permissionformanager=req.body.manager;
+    var permissionforhr=req.body.hr;
+    var permissionforemployee=req.body.employee;
+    var permissionforsupport=req.body.support;
+var status='pending'
+    var file=req.files.filename;
+    var filename=file.name
+    file.mv('./upload/'+filename,(err,result)=>{
+      if(err)
+      throw err;
+      else {
+        var newdata=Document({
+          uploadby:uploadername,
+          docname:docname,
+          filename:filename,
+          category:category,
+          department:department,
+          comment:comment,
+          adminstatus:status,
+          supportstatus:status,
+          managerstatus:status,
+          employeestatus:status,
+
+          manager:permissionformanager,
+          support:permissionforsupport,
+
+          hr:permissionforhr,
+          employee:permissionforemployee,
+          description:description
+        })
+        newdata.save().then((data)=>{
+          res.render('uploaddoc',{msg:'file uploaded successfully',admin:req.session.admin,employee:req.session.employee})
+        })
+      }
+    })
+  }
+})
+
+/////////////////show document by manager ,hr and employee   and authorizes or reject doccument////////////////////
+///view doccument by admin/////
+app.get('/viewdocumentbyadmin',(req,res)=>{
+
+Document.find({},(err,result)=>{
+  console.log(result);
+  if(err)
+  throw err;
+  else
+  res.render('viewdocument',{data:result,admin:req.session.admin})
+
+})
+})
+
+
+////authorized  by admin/////
+app.get('/authorizedbyadmin',(req,res)=>{
+
+    var id=req.query.sid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{supportstatus:"authorized by admin"}},(err,result)=>{
+      console.log(result);
+
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({support:"view"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request authorized by admin",admin:req.session.admin})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",admin:req.session.admin})
+    }
+    })
+  })
+
+////////////doccument reject by admin////////////
+
+app.get('/docrejectedbyadmin',(req,res)=>{
+
+    var id=req.query.rejectid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{supportstatus:"reject by admin"}},(err,result)=>{
+      console.log(result);
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({support:"view"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request reject by admin",admin:req.session.admin})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",admin:req.session.admin})
+    }
+    })
+  })
+
+//////////////////////view doccument by  support /////////
+app.get('/viewdocumentbysupport',(req,res)=>{
+
+Document.find({support:"view",supportstatus:"authorized by admin"},(err,result)=>{
+  console.log(result);
+  if(err)
+  throw err;
+  else
+  res.render('viewdocument',{data:result,support:req.session.support})
+
+})
+})
+
+/////authorized  by support/////
+app.get('/authorizedbysupport',(req,res)=>{
+
+    var id=req.query.sid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{managerstatus:"authorized by support"}},(err,result)=>{
+      console.log(result);
+
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({support:"view",supportstatus:"authorized by admin"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request authorized by support",support:req.session.support})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",support:req.session.support})
+    }
+    })
+  })
+
+////////////doccument reject by support////////////
+
+app.get('/docrejectedbysupport',(req,res)=>{
+
+    var id=req.query.rejectid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{managerstatus:"reject by support"}},(err,result)=>{
+      console.log(result);
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({support:"view" ,supportstatus:"authorized by admin"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request reject by support",support:req.session.support})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",support:req.session.support})
+    }
+    })
+  })
+
+//////////view document by manager if authorized by support//////////
+
+app.get('/viewdocumentbymanager',(req,res)=>{
+
+Document.find({manager:"view",managerstatus:"authorized by support"},(err,result)=>{
+  console.log(result);
+  if(err)
+  throw err;
+  else
+  res.render('viewdocument',{data:result,manager:req.session.manager})
+
+})
+})
+
+//authorized or reject view doccument by employee//////////by manager///
+/////authorized  by manager /////
+app.get('/authorizedbymanager',(req,res)=>{
+
+    var id=req.query.sid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{employeestatus:"authorized by manager"}},(err,result)=>{
+      console.log(result);
+
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({manager:"view",managerstatus:"authorized by support"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request authorized by manager",manager:req.session.manager})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",manager:req.session.manager})
+    }
+    })
+  })
+
+////////////doccument reject by manager////////////
+
+app.get('/docrejectedbymanager',(req,res)=>{
+
+    var id=req.query.rejectid
+  console.log(id);
+
+  Document.updateOne({_id:id},{$set:{employeestatus:"reject by manager"}},(err,result)=>{
+      console.log(result);
+      if(err)
+      throw err;
+      else if (result.nModified >0) {
+        Document.find({manager:"view",managerstatus:"authorized by support"},(err,result1)=>{
+          console.log(result1);
+
+          if(err)
+          throw err;
+         else
+          res.render('viewdocument',{data:result1, msg:"request reject by manager",manager:req.session.manager})
+
+  })
+    }
+    else {
+      res.render('home',{ msg:"request fail.........",manager:req.session.manager})
+    }
+    })
+  })
+/////////////////////
+app.get('/viewdocumentbyemployee',(req,res)=>{
+
+Document.find({employee:"view",employeestatus:"authorized by manager"},(err,result)=>{
+  console.log(result);
+  if(err)
+  throw err;
+  else
+  res.render('viewdocument',{data:result,employee:req.session.employee})
+
+})
+})
+/////////////view document uploaded by employee or admin///////
+app.get('/viewdocumentUpload',(req,res)=>{
+let user;
+if (req.session.employee) {
+  user=req.session.employee
+}
+else {
+  user=req.session.admin
+
+}
+console.log(user);
+Document.find({uploadby:user},(err,result1)=>{
+  console.log(result1);
+  if(err)
+  throw err;
+  else
+  res.render('viewdocument',{data:result1,employee:req.session.employee,admin:req.session.admin})
+
+})
+})
+/////////////search documents/////////////////////////
+app.get('/searchdoc',(req,res)=>{
+  res.render("searchdoc",{admin:req.session.admin})
+})
+
+app.get('/searchresult',(req,res)=>{
+let searchby=req.query.searchby
+let typethis=req.query.typethis
+
+if (searchby=="department") {
+  Document.find({department:typethis},(err,result)=>{
+    console.log(result.length);
+    if (err)
+    throw err;
+      else if (result.lenght != 0) {
+      res.render("viewsearchresult",{data:result,admin:req.session.admin})
+    }
+    else{
+      res.render("viewsearchresult", { msg:"no record found.....",admin:req.session.admin})
+    }
+  })
+}
+else if (searchby=="category") {
+  Document.find({category:typethis},(err,result)=>{
+    if (err)
+    throw console.error(err);
+    else if (result.lenght !=0) {
+      res.render("viewsearchresult",{data:result,admin:req.session.admin})
+    }
+    else
+    res.render("viewsearchresult",{msg:"no record found.....",admin:req.session.admin})
+  })
+}
+
+else if (searchby=="docname") {
+  Document.find({docname:typethis},(err,result)=>{
+    if (err)
+    throw console.error(err);
+    else if (result.lenght !=0) {
+      res.render("viewsearchresult",{data:result,admin:req.session.admin})
+    }
+    else{
+      res.render("viewsearchresult",{msg:"no record found.....",admin:req.session.admin})
+
+    }
+  })
+}
+else if (searchby=="uploadby") {
+  Document.find({uploadby:typethis},(err,result)=>{
+    if (err)
+    throw console.error(err);
+    else if (result.lenght !=0) {
+      res.render("viewsearchresult",{data:result,admin:req.session.admin})
+    }
+    else
+    res.render("viewsearchresult",{msg:"no record found.....",admin:req.session.admin})
+  })
+}
+else if (searchby=="filename") {
+  Document.find({filename:typethis},(err,result)=>{
+    if (err)
+    throw console.error(err);
+    else if (result.lenght !=0) {
+      res.render("viewsearchresult",{data:result,admin:req.session.admin})
+    }
+    else
+    res.render("viewsearchresult",{msg:"no record found.....",admin:req.session.admin})
+  })
+}
+})
 
 //////////add assets/////////////////////
-
 
 app.post('/addasset',(req,res)=>{
 
@@ -1289,9 +1685,7 @@ app.get('/showcompletionstatus',(req,res)=>{
     else if (result.length != 0) {
       var manid=result[0].managerid
 console.log(manid);
-
 ////////for total completedtask done by employee  result1.lenght/////////
-
 Task.find({status:3,user:sid,managerid:manid},(err,result1)=>{
   console.log(result1);
   if(err)
@@ -1309,7 +1703,7 @@ Task.find({status:3,user:sid,managerid:manid},(err,result1)=>{
              function completionpercentage() {
               var totalpercentage=  (result1.length/result.length)*100
               return totalpercentage;
-          }
+                            }
 
              var status={
                     user:sid,
@@ -1318,13 +1712,11 @@ Task.find({status:3,user:sid,managerid:manid},(err,result1)=>{
                     incompleted:result2.length,
                     calulation:completionpercentage()
 
-             }
+                     }
              console.log(status);
-
-
         res.render('empcompletionstatus',{total:status, employee:req.session.employee,manager:req.session.manager})
-
         }
+
         else
         res.render('empcompletionstatus',{msg:"no record found", employee:req.session.employee,manager:req.session.manager})
 
@@ -1332,6 +1724,5 @@ Task.find({status:3,user:sid,managerid:manid},(err,result1)=>{
       }
 })
 }
-
 })
 })

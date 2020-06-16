@@ -1,0 +1,98 @@
+</head>
+
+<div class="container">
+  <div class="jumbotron">
+    <h3 style="color:coral">welcome  :{{admin}}{{employee}}{{manager}}{{support}}</h3>
+
+              {{#if msg}}
+                  <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{msg}}</strong>
+                  </div>
+                {{/if}}
+
+
+    <h1 style="">documents</h1>
+
+
+<table class="table table-hover">
+
+  {{#if admin}}
+  <tr><th>filename</th><th>uploadby</th><th>document name</th><th>category</th><th>description</th><th>to manager</th><th>to employee</th><th>to support</th></tr>
+  {{#each data}}
+
+  <tr>
+    <td> <a href="/{{this.filename}}" class="glyphicon glyphicon-paperclip" data-toggle="popover" title="click for download" >{{this.filename}}</a></td>
+  <td>{{this.uploadby}}</td>
+  <td>{{this.docname}}</td>
+
+  <td>{{this.category}}</td>
+  <td>{{this.description}}</td>
+  <td>{{this.managerstatus}}</td>
+  <td>{{this.employeestatus}}</td>
+  <td>{{this.supportstatus}}</td>
+
+  <td><a href="/authorizedbyadmin?sid={{this._id}}" class="glyphicon glyphicon-ok-circle"></a></td>
+  <td><a href="/docrejectedbyadmin?rejectid={{this._id}}" class="glyphicon glyphicon-remove-circle"></a></td>
+  </tr>
+  {{/each }}
+
+  {{else}}
+{{#if support}}
+<tr><th>filename</th><th>document name</th><th>category</th><th>description</th><th>view status</th><th>view by manager</th></tr>
+{{#each data}}
+
+<tr>
+  <td> <a href="/{{this.filename}}" class="glyphicon glyphicon-paperclip" data-toggle="popover" title="click for download" >{{this.filename}}</a></td>
+<td>{{this.docname}}</td>
+<td>{{this.category}}</td>
+<td>{{this.description}}</td>
+<td>{{this.supportstatus}}</td>
+<td>{{this.managerstatus}}</td>
+<td><a href="/authorizedbysupport?sid={{this._id}}" class="glyphicon glyphicon-ok-circle"></a></td>
+<td><a href="/docrejectedbysupport?rejectid={{this._id}}" class="glyphicon glyphicon-remove-circle"></a></td>
+</tr>
+{{/each }}
+
+{{else}}
+{{#if manager}}
+<tr><th>filename</th><th>document name</th><th>category</th><th>description</th><th>view status</th><th>view by employee</th></tr>
+{{#each data}}
+
+<tr>
+<td> <a href="/{{this.filename}}" class="glyphicon glyphicon-paperclip" data-toggle="popover" title="click for download" >{{this.filename}}</a></td>
+<td>{{this.docname}}</td>
+<td>{{this.category}}</td>
+<td>{{this.description}}</td>
+<td>{{this.managerstatus}}</td>
+<td>{{this.employeestatus}}</td>
+<td><a href="/authorizedbymanager?sid={{this._id}}" class="glyphicon glyphicon-ok-circle"></a></td>
+<td><a href="/docrejectedbymanager?rejectid={{this._id}}" class="glyphicon glyphicon-remove-circle"></a></td>
+<td><a  class="glyphicon glyphicon-trash" href="/deleteproduct?_id={{this._id}}" onclick="return confirm('do u want to delete this..')"></a></td>
+</tr>
+{{/each }}
+
+
+{{else}}
+{{#if employee}}
+<tr><th>filename</th><th>document name</th><th>category</th><th>description</th><th>view status</th><th>upload by</th></tr>
+{{#each data}}
+
+<tr>
+<td> <a href="/{{this.filename}}" class="glyphicon glyphicon-paperclip" data-toggle="popover" title="click for download" >{{this.filename}}</a></td>
+<td>{{this.docname}}</td>
+<td>{{this.category}}</td>
+<td>{{this.description}}</td>
+<td>{{this.employeestatus}}</td>
+<td>{{this.uploadby}}</td>
+</tr>
+{{/each }}
+
+{{/if}}
+{{/if}}
+{{/if}}
+{{/if}}
+
+</table>
+</div>
+</div>
